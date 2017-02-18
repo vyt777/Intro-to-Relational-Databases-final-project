@@ -6,7 +6,7 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 
--- My comments. These database is designed up to 16 players max so max number 
--- of rounds will be 4.
+-- My comments. 
+
 CREATE TABLE player_stats (id serial PRIMARY KEY, name varchar(255), matches int,
 wins int, rating float(3));
