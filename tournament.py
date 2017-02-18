@@ -93,7 +93,8 @@ def reportMatch(winner, loser):
     """
     conn = connect()
     c = conn.cursor()
-    
+
+    #Updating winner's record 
     query = "SELECT matches, wins, rating FROM player_stats WHERE id = %s;"
     c.execute(query, (winner,))
     starting_stats = c.fetchall()
@@ -103,6 +104,7 @@ def reportMatch(winner, loser):
     query = "UPDATE player_stats SET matches=%s, wins=%s, rating=%s WHERE id = %s;"
     c.execute(query, (matches, wins, rating, winner, ))
 
+    #Updating loser's record 
     query = "SELECT matches, wins, rating FROM player_stats WHERE id = %s;"
     c.execute(query, (loser,))
     starting_stats = c.fetchall()
@@ -115,13 +117,19 @@ def reportMatch(winner, loser):
     conn.commit()
     conn.close()
     
-
-
-
-    #query = "UPDATE player_stats SET matches=+'1', wins=+'1', rating='0' where id ='1';"
-    #c.execute(query, (name,))
-    
- 
+def fetching(stats):
+	#forming pairings (list of tuples) from stats
+	n=1
+	m=0
+	pairings = []
+	for e in stats:
+		if n%2==0:
+			pairings[m] = pairings[m] +(e[0:2])
+			m+=1
+		else:
+			pairings.append(e[0:2])
+		n+=1
+	return pairings
  
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
@@ -138,5 +146,20 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    conn = connect()
+    c = conn.cursor()
+
+    #fetching stats
+    query = "select id, name, rating from player_stats order by rating desc;"
+    c.execute(query)
+    stats = c.fetchall()
+    pairings = fetching(stats)
+
+    conn.commit()
+    conn.close()
+    return pairings 
+
+    
+    
 
 
