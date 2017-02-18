@@ -91,6 +91,35 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    conn = connect()
+    c = conn.cursor()
+    
+    query = "SELECT matches, wins, rating FROM player_stats WHERE id = %s;"
+    c.execute(query, (winner,))
+    starting_stats = c.fetchall()
+    matches = starting_stats[0][0]+1
+    wins = starting_stats[0][1]+1
+    rating = float(wins) / matches * 100
+    query = "UPDATE player_stats SET matches=%s, wins=%s, rating=%s WHERE id = %s;"
+    c.execute(query, (matches, wins, rating, winner, ))
+
+    query = "SELECT matches, wins, rating FROM player_stats WHERE id = %s;"
+    c.execute(query, (loser,))
+    starting_stats = c.fetchall()
+    matches = starting_stats[0][0]+1
+    wins = starting_stats[0][1]
+    rating = float(wins) / matches * 100
+    query = "UPDATE player_stats SET matches=%s, wins=%s, rating=%s WHERE id = %s;"
+    c.execute(query, (matches, wins, rating, loser, ))
+
+    conn.commit()
+    conn.close()
+    
+
+
+
+    #query = "UPDATE player_stats SET matches=+'1', wins=+'1', rating='0' where id ='1';"
+    #c.execute(query, (name,))
     
  
  

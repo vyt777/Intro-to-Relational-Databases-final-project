@@ -9,4 +9,4 @@
 -- My comments. 
 
 CREATE TABLE player_stats (id serial PRIMARY KEY, name varchar(255), matches int,
-wins int, rating float(3));
+wins int, rating decimal(6,3));
